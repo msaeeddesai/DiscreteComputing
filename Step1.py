@@ -61,5 +61,34 @@
 # print("Sorted array:", arr)
 
 
+# PRAM Model 2
 
+import threading
 
+# Define the array
+arr = [64, 34, 25, 12, 22, 11, 90]
+n = len(arr)
+
+# Function to perform comparison and swap in parallel
+def compare_and_swap(arr, j):
+    if arr[j] > arr[j + 1]:
+        arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+# Parallel Bubble Sort using PRAM model
+for i in range(n):
+    # Create a list to hold threads
+    threads = []
+    
+    # Parallelize the inner loop
+    for j in range(0, n - i - 1):
+        # Create a new thread for each comparison and swap
+        thread = threading.Thread(target=compare_and_swap, args=(arr, j))
+        threads.append(thread)
+        thread.start()
+    
+    # Wait for all threads to complete
+    for thread in threads:
+        thread.join()
+
+# Print the sorted array
+print("Sorted array:", arr)
